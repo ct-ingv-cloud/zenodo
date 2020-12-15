@@ -77,26 +77,108 @@ prereserveButton.$inject = [
 ];
 
 
-function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q, $interval) {
+function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
   	console.log('DBG:Retrieve Metadata Angular JS directive loaded');
+  
+
+  var pdz_dep_url = 'https://pdz-dev.ddns.net:5000/api/deposit/depositions/';
+  var config = 'Authorization: Bearer ACCESS_TOKEN';
+
+
+  function simpleParser(data, metadata) {
+        var metadataResult = {};
+        console.log(data);
+
+          //LOCATIONS
+          var result = [];
+          var locations = data.attributes['geoLocations'];
+          locations.forEach(function(loc) {
+                var obj= {};
+                if ('geoLocationPlace' in loc)
+                        obj['place'] = loc.geoLocationPlace;
+                if ('geoLocationPoint' in loc) {
+                        if (loc.geoLocationPoint.pointLatitude !== undefined) {
+                                obj['lat'] = loc.geoLocationPoint.pointLatitude;
+                        }
+                        if (loc.geoLocationPoint.pointLongitude !== undefined) {
+                                obj['lon'] = loc.geoLocationPoint.pointLongitude;
+                        }
+                }
+                if ('geoLocationBox' in loc) {
+                        if (loc.geoLocationBox.eastBoundLongitude !== undefined) {
+                                obj['lon'] = loc.geoLocationBox.eastBoundLongitude;
+                        }
+                        if (loc.geoLocationBox.northBoundLatitude !== undefined) {
+                                obj['lat'] = loc.geoLocationBox.northBoundLatitude;
+                        }
+                }
+                result.push(obj);
+          });
+          metadata['locations'] = result;
+
+          //KEYWORDS
+          result = [];
+          data.attributes['subjects'].forEach(function(subj) {
+                result.push(subj['subject']);
+          });
+          metadata['keywords'] = result;
+
+          return metadata;
+  }
+
+
+
   function link($scope, elem, attrs, vm) {
 	console.log('DBG:Retrieve Metadata:Link Function loaded');
 	//$scope.model.datacite_metadata = 0
-	$scope.retrieveMetadata = function() {
+	$scope.retrieveMetadata = function(rec) {
 		console.log('DBG:Button pressed');
-	/*	
-		$scope.model.datacite_metadata = 1
-		$interval(function() {
-			$scope.model.datacite_metadata = 0
-		}, 3000, 1)
-	*/
-		console.log('DBG: %s',  $scope.model.doi);
+		console.log(rec);
+		//$scope.model.datacite_metadata = 1
+	
+		var dc_url = "https://api.datacite.org/dois/" + rec.doi;
+		var dc_metadata = {};
+
 		$http({
 			method : "GET",
-			url : "https://api.datacite.org/dois/10.13127/etna_infra/raw_20181223_25"
+			url : dc_url
 		}).then(function mySuccess(response) {
-			//$scope.model.datacite_metadata = response.data;
-			console.log(response.data);
+			dc_metadata = response.data.data;
+			var url = pdz_dep_url + rec.recid;
+
+			// 1 Deposition from Record
+			//
+			$http.get(url, {}, config).then(function(response) {
+				// 2 Unlock Edit Action
+				// in response.data retrieve metadata field
+				//
+				$http.post(url + '/actions/edit', {}, config).then(function(response) {
+					// 3 Remapping metadata
+					//
+					response.data.metadata = simpleParser(dc_metadata, response.data.metadata);
+					
+					console.log(response.data.metadata);
+					$http.put(url, {'metadata': response.data.metadata}, config).then(function(response) {
+						// 4 Action Publish
+						// 
+						$http.post(url + '/actions/publish', {}, config).then(function(response) {
+							// Published
+							//
+							console.log(response);
+						}, function (error) { 
+							console.log('STEP 4'); 
+							console.error(error);
+							$http.post(url + '/actions/discard', {}, config).then(function(response) {}, function(error) {}); 
+						});							
+					}, function(error) { //Call discard action
+						console.log('STEP 3'); 
+						console.error(error); 
+						$http.post(url + '/actions/discard', {}, config).then(function(response) {}, function(error) {});
+					});
+			
+				}, function (error) { console.log('STEP 2'); console.error(error) });
+			}, function(error) { console.log('STEP 1'); console.error(error) });
+			
 			//$scope.model.datacite_metadata = 1
 		}, function myError(response) {
 			$scope.statusText = response.statusText;
@@ -106,7 +188,6 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q, $interval) {
   return {
     scope: false,
     restrict: 'A',
-    require: '^invenioRecords',
     link: link,
   };
 }

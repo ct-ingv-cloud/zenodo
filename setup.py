@@ -198,6 +198,7 @@ setup(
             'zenodo_openaire = zenodo.modules.openaire.ext:ZenodoOpenAIRE',
             'zenodo_exporter = zenodo.modules.exporter.ext:InvenioExporter',
             'zenodo_frontpage = zenodo.modules.frontpage.ext:ZenodoFrontpage',
+            'zenodo_gmailoauthclient = zenodo.modules.gmailoauthclient.ext:ZenodoGmailoauthclient',
             'zenodo_stats = zenodo.modules.stats.ext:ZenodoStats',
             'zenodo_theme = zenodo.modules.theme.ext:ZenodoTheme',
             'zenodo_tokens = zenodo.modules.tokens.ext:ResourceAccessTokens',
@@ -217,6 +218,7 @@ setup(
             'zenodo_communities = zenodo.modules.communities.views:blueprint',
             'zenodo_deposit = zenodo.modules.deposit.views:blueprint',
             'zenodo_frontpage = zenodo.modules.frontpage.views:blueprint',
+            'zenodo_gmailoauthclient = zenodo.modules.gmailoauthclient.views:blueprint',
             'zenodo_openaire = zenodo.modules.openaire.views:blueprint',
             'zenodo_support = zenodo.modules.support.views:blueprint',
             'zenodo_redirector = zenodo.modules.redirector.views:blueprint',
@@ -267,6 +269,7 @@ setup(
             'zenodo_theme_css = zenodo.modules.theme.bundles:css',
             'zenodo_theme_js = zenodo.modules.theme.bundles:js',
             'zenodo_search_js = zenodo.modules.theme.bundles:search_js',
+            'zenodo_datacite_importer_js = zenodo.modules.records.bundles:importer_js',
         ],
         'invenio_jsonschemas.schemas': [
             'zenodo_records = zenodo.modules.records.jsonschemas',

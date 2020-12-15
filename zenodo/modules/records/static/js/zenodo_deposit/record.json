@@ -1,0 +1,80 @@
+{
+  "conceptrecid": "168",
+  "created": "2020-12-14T11:40:33.260668+00:00",
+  "doi": "10.1234/tmp.doi.to.change.1607945897609",
+  "files": [
+    {
+      "bucket": "9c84fa2f-2cae-4823-8eff-77f3d9bea955",
+      "checksum": "md5:826d654793e9089e5c8bfd9fb2071de0",
+      "key": "Logo_INGV_dal_2018.png",
+      "links": {
+        "self": "https://pdz-dev.ddns.net:5000/api/files/9c84fa2f-2cae-4823-8eff-77f3d9bea955/Logo_INGV_dal_2018.png"
+      },
+      "size": 60971,
+      "type": "png"
+    }
+  ],
+  "id": 169,
+  "links": {
+    "badge": "https://pdz-dev.ddns.net:5000/badge/doi/10.1234/tmp.doi.to.change.1607945897609.svg",
+    "bucket": "https://pdz-dev.ddns.net:5000/api/files/9c84fa2f-2cae-4823-8eff-77f3d9bea955",
+    "doi": "https://doi.org/10.1234/tmp.doi.to.change.1607945897609",
+    "html": "https://pdz-dev.ddns.net:5000/record/169",
+    "latest": "https://pdz-dev.ddns.net:5000/api/records/169",
+    "latest_html": "https://pdz-dev.ddns.net:5000/record/169",
+    "self": "https://pdz-dev.ddns.net:5000/api/records/169",
+    "thumb250": "https://pdz-dev.ddns.net:5000/api/iiif/v2/9c84fa2f-2cae-4823-8eff-77f3d9bea955:a7ee8615-eef1-4142-be50-9e5a548fe3dd:Logo_INGV_dal_2018.png/full/250,/0/default.png",
+    "thumbs": {
+      "10": "https://pdz-dev.ddns.net:5000/record/169/thumb10",
+      "100": "https://pdz-dev.ddns.net:5000/record/169/thumb100",
+      "1200": "https://pdz-dev.ddns.net:5000/record/169/thumb1200",
+      "250": "https://pdz-dev.ddns.net:5000/record/169/thumb250",
+      "50": "https://pdz-dev.ddns.net:5000/record/169/thumb50",
+      "750": "https://pdz-dev.ddns.net:5000/record/169/thumb750"
+    }
+  },
+  "metadata": {
+    "access_right": "open",
+    "access_right_category": "success",
+    "creators": [
+      {
+        "affiliation": "Laboratori INGV",
+        "name": "Fabrizio Bianchi"
+      }
+    ],
+    "description": "<p>Un Dataset di prova per far funzionare il flusso della applicazione Zenodo + INGV + Datacite</p>",
+    "doi": "10.1234/tmp.doi.to.change.1607945897609",
+    "license": {
+      "id": "gpl-3.0"
+    },
+    "publication_date": "2020-12-14",
+    "relations": {
+      "version": [
+        {
+          "count": 1,
+          "index": 0,
+          "is_last": true,
+          "last_child": {
+            "pid_type": "recid",
+            "pid_value": "169"
+          },
+          "parent": {
+            "pid_type": "recid",
+            "pid_value": "168"
+          }
+        }
+      ]
+    },
+    "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+    },
+    "title": "Prova DATASET NUM.001"
+  },
+  "owners": [
+    3
+  ],
+  "revision": 1,
+  "stats": {},
+  "updated": "2020-12-14T11:40:33.361771+00:00"
+}

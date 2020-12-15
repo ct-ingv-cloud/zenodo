@@ -42,7 +42,7 @@
   font-family: $brand-font-family;
   font-weight: $brand-font-weight;
   font-size: $brand-font-size;
-  padding: ($navbar-brand-padding-vertical)-4 $navbar-padding-horizontal+10 $navbar-brand-padding-vertical+4 $navbar-padding-horizontal;
+  padding: ($navbar-brand-padding-vertical)-4 $navbar-padding-horizontal+10 0 0; //$navbar-brand-padding-vertical+4 $navbar-padding-horizontal;
 }
 
 .navbar-default {

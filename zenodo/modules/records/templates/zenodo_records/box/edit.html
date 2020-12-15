@@ -25,10 +25,37 @@
 {# Records with neither DOI or deposit cannot be edited #}
 {%- set edit_disabled = not (record.doi and (record._deposit and record._deposit.id)) %}
 
+{%- block javascript %} 
+
+{% assets "zenodo_deposit_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+
+
+<script type="text/javascript"> 
+	angular.element(document).ready(function() {
+		var app = angular.module('invenioRecords'); 
+		app.requires.push('invenioRecords.providers');
+
+		angular.bootstrap(
+			document.getElementById('retrieveMetadataBtn'), [
+				'invenioRecords', 'invenioFiles',
+				'mgcrea.ngStrap.helpers.dateParser', 'mgcrea.ngStrap.tooltip',
+				'ui.select', 'mgcrea.ngStrap.select', 'mgcrea.ngStrap.datepicker',
+				'mgcrea.ngStrap.modal', 'pascalprecht.translate', 'ui.sortable',
+				'schemaForm', 'mgcrea.ngStrap'
+			]);
+	});
+</script>
+
+
+
+
+{%- endblock javascript %}
+
 {%- if current_user|has_record_perm(record, 'update') %}
 <form action="{{ url_for('zenodo_deposit.edit', pid_value=pid.pid_value) }}" method="POST">
   <button class="btn btn-warning btn-block" type="submit" {{ 'disabled' if edit_disabled else ''}}><i class="fa fa-pencil-square-o"></i> Edit</button>
 </form>
+<button id="retrieveMetadataBtn" class="btn btn-info btn-block" ng-click="retrieveMetadata({{record}})" type="submit" {{ 'disabled' if edit_disabled else ''}} retrieve-metadata><i class="fa fa-cloud-download"></i> Import Datacite Metadatas</button>
 {%- endif %}
 
 {# Only local DOIs can be versioned #}
