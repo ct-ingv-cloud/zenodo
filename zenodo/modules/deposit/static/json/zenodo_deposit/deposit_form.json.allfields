@@ -25,9 +25,166 @@
         "htmlClass": "resource-type-field",
         "titleMap": [
           {
+            "value": "publication",
+            "name": "Publication",
+            "fa_cls": "fa-file-text"
+          },
+          {
+            "value": "poster",
+            "name": "Poster",
+            "fa_cls": "fa-columns"
+          },
+          {
+            "value": "presentation",
+            "name": "Presentation",
+            "fa_cls": "fa-group"
+          },
+          {
             "value": "dataset",
             "name": "Dataset",
             "fa_cls": "fa-table"
+          },
+          {
+            "value": "image",
+            "name": "Image",
+            "fa_cls": "fa-bar-chart-o"
+          },
+          {
+            "value": "video",
+            "name": "Video/Audio",
+            "fa_cls": "fa-film"
+          },
+          {
+            "value": "software",
+            "name": "Software",
+            "fa_cls": "fa-code"
+          },
+          {
+            "value": "lesson",
+            "name": "Lesson",
+            "fa_cls": "fa-graduation-cap"
+          },
+          {
+            "value": "physicalobject",
+            "name": "Physical object",
+            "fa_cls": "fa-cube"
+          },
+          {
+            "value": "other",
+            "name": "Other",
+            "fa_cls": "fa-asterisk"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "publication_type",
+        "title": "Publication type",
+        "condition": "model.upload_type == 'publication'",
+        "titleMap": [
+          {
+            "value": "annotationcollection",
+            "name": "Annotation collection"
+          },
+          {
+            "value": "book",
+            "name": "Book"
+          },
+          {
+            "value": "section",
+            "name": "Book section"
+          },
+          {
+            "value": "conferencepaper",
+            "name": "Conference paper"
+          },
+          {
+            "value": "datamanagementplan",
+            "name": "Data management plan"
+          },
+          {
+            "value": "article",
+            "name": "Journal article"
+          },
+          {
+            "value": "patent",
+            "name": "Patent"
+          },
+          {
+            "value": "preprint",
+            "name": "Preprint"
+          },
+          {
+            "value": "deliverable",
+            "name": "Project deliverable"
+          },
+          {
+            "value": "milestone",
+            "name": "Project milestone"
+          },
+          {
+            "value": "proposal",
+            "name": "Proposal"
+          },
+          {
+            "value": "report",
+            "name": "Report"
+          },
+          {
+            "value": "softwaredocumentation",
+            "name": "Software documentation"
+          },
+          {
+            "value": "taxonomictreatment",
+            "name": "Taxonomic treatment"
+          },
+          {
+            "value": "technicalnote",
+            "name": "Technical note"
+          },
+          {
+            "value": "thesis",
+            "name": "Thesis"
+          },
+          {
+            "value": "workingpaper",
+            "name": "Working paper"
+          },
+          {
+            "value": "other",
+            "name": "Other"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "image_type",
+        "title": "Image type",
+        "condition": "model.upload_type == 'image'",
+        "titleMap": [
+          {
+            "value": "figure",
+            "name": "Figure"
+          },
+          {
+            "value": "plot",
+            "name": "Plot"
+          },
+          {
+            "value": "drawing",
+            "name": "Drawing"
+          },
+          {
+            "value": "diagram",
+            "name": "Diagram"
+          },
+          {
+            "value": "photo",
+            "name": "Photo"
+          },
+          {
+            "value": "other",
+            "name": "Other"
           }
         ]
       },
@@ -328,7 +485,6 @@
     "title": "Funding",
     "description": "Zenodo is integrated into reporting lines for research funded by the European Commission via <a target='_blank' rel='noopener noreferrer' href='http://www.openaire.eu'><i class='fa fa-external-link'></i> OpenAIRE</a>. Specify grants which have funded your research, and we will let your funding agency know!",
     "fieldhint": "recommended",
-    "collapsed": true,
     "items": [
       {
         "type": "array",
@@ -760,6 +916,34 @@
   },
   {
     "type": "fieldset",
+    "title": "Journal",
+    "fieldhint": "optional",
+    "collapsed": true,
+    "items": [
+      {
+        "key": "journal_title",
+        "title": "Journal title",
+        "description": "Optional."
+      },
+      {
+        "key": "journal_volume",
+        "title": "Volume",
+        "description": "Optional."
+      },
+      {
+        "key": "journal_issue",
+        "title": "Issue",
+        "description": "Optional."
+      },
+      {
+        "key": "journal_pages",
+        "title": "Pages",
+        "description": "Optional."
+      }
+    ]
+  },
+  {
+    "type": "fieldset",
     "title": "Conference",
     "description": "",
     "fieldhint": "optional",
@@ -801,6 +985,95 @@
         "title": "Part",
         "description": "Optional. Number of part within a session.",
         "placeholder": "e.g. 1"
+      }
+    ]
+  },
+  {
+    "type": "fieldset",
+    "title": "Book/Report/Chapter",
+    "description": "For parts of books and reports.",
+    "fieldhint": "optional",
+    "collapsed": true,
+    "items": [
+      {
+        "key": "imprint_publisher",
+        "title": "Publisher",
+        "description": "Optional."
+      },
+      {
+        "key": "imprint_place",
+        "title": "Place",
+        "description": "Optional.",
+        "placeholder": "e.g. city, country"
+      },
+      {
+        "key": "imprint_isbn",
+        "title": "ISBN",
+        "description": "Optional.",
+        "placeholder": "e.g. 0-06-251587-X"
+      },
+      {
+        "key": "partof_title",
+        "title": "Book title",
+        "description": "Optional. Title of the book or report which this upload is part of."
+      },
+      {
+        "key": "partof_pages",
+        "title": "Pages",
+        "description": "Optional."
+      }
+    ]
+  },
+  {
+    "type": "fieldset",
+    "title": "Thesis",
+    "fieldhint": "optional",
+    "collapsed": true,
+    "items": [
+      {
+        "title": "Awarding university",
+        "key": "thesis_university",
+        "fa_cls": "fa-building",
+        "required": false,
+        "description": "Optional."
+      },
+      {
+        "type": "array",
+        "key": "thesis_supervisors",
+        "title": "Supervisors",
+        "fa_cls": "fa-user",
+        "sortOptions": {
+          "disabled": false,
+          "handle": "i.sort-handle",
+          "cursor": "move",
+          "axis": "y"
+        },
+        "add": "Add another supervisor",
+        "description": "",
+        "required": false,
+        "inline": true,
+        "items": [
+          {
+            "key": "thesis_supervisors[].name",
+            "notitle": true,
+            "description": "",
+            "placeholder": "Family name, given names"
+          },
+          {
+            "key": "thesis_supervisors[].affiliation",
+            "notitle": true,
+            "description": "",
+            "placeholder": "Affiliation"
+          },
+          {
+            "type": "text",
+            "key": "thesis_supervisors[].orcid",
+            "fieldHtmlClass": "orcid-field",
+            "placeholder": "ORCID (e.g.: 0000-0002-1825-0097)",
+            "description": "Optional.",
+            "notitle": true
+          }
+        ]
       }
     ]
   },
