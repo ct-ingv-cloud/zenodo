@@ -31,6 +31,8 @@ from oauthlib.oauth2 import WebApplicationClient
 
 _security = LocalProxy(lambda: current_app.extensions['security'])
 _datastore = LocalProxy(lambda: _security.datastore)
+_clientId = LocalProxy(lambda: current_app.config.get('GOOGLE_CLIENT_ID'))
+client = WebApplicationClient(_clientId)
 
 blueprint = Blueprint(
     'zenodo_gmailoauthclient',
@@ -42,7 +44,7 @@ blueprint = Blueprint(
 def callback():
     # Get authorization code Google sent back to you
     code = request.args.get("code")
-    current_app.logger.info('CODE IS: %s' %code)
+    current_app.logger.debug('CODE IS: %s' %code)
 
     # Find out what URL to hit to get tokens that allow you to ask for
     # things on behalf of a user
@@ -70,7 +72,7 @@ def callback():
     # from Google that gives you the user's profile information,
     # including their Google profile image and email
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
-    current_app.logger.info('USR_NFO_EPT: %s' %userinfo_endpoint)
+    current_app.logger.debug('USR_NFO_EPT: %s' %userinfo_endpoint)
     uri, headers, body = client.add_token(userinfo_endpoint)
     userinfo_response = requests.get(uri, headers=headers, data=body)
 
@@ -99,7 +101,7 @@ def callback():
 
 @blueprint.route('/login')
 def login():
-    current_app.logger.info('Try to authenticate with app PDZ: %s' %current_app.config.get('GOOGLE_CLIENT_ID'))
+    current_app.logger.debug('Try to authenticate with app PDZ: %s' %current_app.config.get('GOOGLE_CLIENT_ID'))
 
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
@@ -114,6 +116,3 @@ def login():
 
 def get_google_provider_cfg():
     return requests.get(current_app.config.get('GOOGLE_DISCOVERY_URL')).json()
-
-# OAuth 2 client setup
-client = WebApplicationClient(current_app.config.get('GOOGLE_CLIENT_ID'))

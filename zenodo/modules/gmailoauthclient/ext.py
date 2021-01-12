@@ -43,5 +43,5 @@ class ZenodoGmailoauthclient(object):
         """Initialize configuration."""
         for k in dir(config):
             if k.startswith('GOOGLE_'):
-                print("KEY: %s VALUE: %s", k, getattr(config, k))
+                #print("KEY: %s VALUE: %s", k, getattr(config, k))
                 app.config.setdefault(k, getattr(config, k))
