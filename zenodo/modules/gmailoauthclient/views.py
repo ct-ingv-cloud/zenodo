@@ -1,18 +1,18 @@
-"""
-  Copyright 2020 INGV - OE (Catania, Italy)
+  #
+  # Copyright 2020 INGV - OE (Catania, Italy)
+  #
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #   http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-"""
 
 __author__ = 'fabrizio, mario'
 
@@ -60,7 +60,7 @@ def callback():
         token_url,
         headers=headers,
         data=body,
-        auth=("741816817698-rm5jo6jiesqgkv87ni7rkt8dnqh24io0.apps.googleusercontent.com", "01hjU9P8vjEIT9_toAQuenZ8"),
+        auth=(current_app.config.get('GOOGLE_CLIENT_ID'), current_app.config.get('GOOGLE_CLIENT_SECRET')),
     )
 
     # Parse the tokens!
@@ -91,7 +91,7 @@ def callback():
                 user = register_user(password=password, email=users_email.lower(), active=True, confirmed_at=datetime.now())
 
             login_user(user, remember=False)
-                
+
     else:
         return "User email not available or not verified by Google.", 400
 
@@ -99,7 +99,7 @@ def callback():
 
 @blueprint.route('/login')
 def login():
-    current_app.logger.info('Try to authenticate with app PDZ: %s' %request.environ.get(current_app.config.get('GOOGLE_CLIENT_ID')))
+    current_app.logger.info('Try to authenticate with app PDZ: %s' %current_app.config.get('GOOGLE_CLIENT_ID'))
 
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
@@ -113,11 +113,7 @@ def login():
     return redirect(request_uri)
 
 def get_google_provider_cfg():
-    return requests.get("https://accounts.google.com/.well-known/openid-configuration").json()
-    #return requests.get(current_app.config.get('GOOGLE_DISCOVERY_URL')).json()
+    return requests.get(current_app.config.get('GOOGLE_DISCOVERY_URL')).json()
 
 # OAuth 2 client setup
-#client = WebApplicationClient(current_app.config.get('GOOGLE_CLIENT_ID'))
-client = WebApplicationClient("741816817698-rm5jo6jiesqgkv87ni7rkt8dnqh24io0.apps.googleusercontent.com")
-
-
+client = WebApplicationClient(current_app.config.get('GOOGLE_CLIENT_ID'))

@@ -22,16 +22,11 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""ZenodoFrontpage module."""
-
 from __future__ import absolute_import, print_function
-
 from . import config
 
-
-
 class ZenodoGmailoauthclient(object):
-    """Zenodo webauthclient extension."""
+    """Zenodo GMail OAuth2 extension."""
 
     def __init__(self, app=None):
         """Extension initialization."""
@@ -47,6 +42,6 @@ class ZenodoGmailoauthclient(object):
     def init_config(app):
         """Initialize configuration."""
         for k in dir(config):
-            if k.startswith('GOOGLE_CLIENT'):
+            if k.startswith('GOOGLE_'):
+                print("KEY: %s VALUE: %s", k, getattr(config, k))
                 app.config.setdefault(k, getattr(config, k))
-

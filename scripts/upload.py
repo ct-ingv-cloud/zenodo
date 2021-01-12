@@ -35,7 +35,6 @@ from six import BytesIO
 
 def upload(token, metadata, files, publish=True):
     """Make an upload."""
-    print(2)
     base_url = 'http://localhost:5000/api/deposit/depositions'
     auth = {
         'Authorization': 'Bearer {0}'.format(token)
@@ -84,7 +83,6 @@ def upload(token, metadata, files, publish=True):
 
 def upload_test(token, publish=True):
     """Test upload."""
-    print(1)
     metadata = {
         'title': 'My first upload',
         'upload_type': 'publication',
