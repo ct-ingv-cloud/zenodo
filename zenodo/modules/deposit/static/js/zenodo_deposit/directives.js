@@ -32,9 +32,6 @@ function prereserveButton($rootScope, InvenioRecordsAPI) {
         // pre-reserved DOI.
         var method = angular.isUndefined(vm.invenioRecordsEndpoints.self) ? 'POST': 'GET';
         var url = vm.invenioRecordsEndpoints.self || vm.invenioRecordsEndpoints.initialization;
-	console.log(url);
-	console.log(method);
-	console.log(vm.invenioRecordsArgs.headers);
         $rootScope.$broadcast('invenio.records.loading.start');
         InvenioRecordsAPI.request({
           method: method,
@@ -46,7 +43,7 @@ function prereserveButton($rootScope, InvenioRecordsAPI) {
               resp.data.metadata.prereserve_doi &&
               resp.data.metadata.prereserve_doi.doi) {
             $scope.model.prereserve_doi = resp.data.metadata.prereserve_doi;
-            $scope.model.doi = '10.1234/tmp.doi.to.change.' + new Date().getTime(); //resp.data.metadata.prereserve_doi.doi;
+            $scope.model.doi = '10.1234/tmp.doi.to.change.' + new Date().getTime();
           }
           $rootScope.$broadcast(
             'invenio.records.endpoints.updated', resp.data.links);
@@ -74,49 +71,6 @@ function prereserveButton($rootScope, InvenioRecordsAPI) {
 prereserveButton.$inject = [
   '$rootScope',
   'InvenioRecordsAPI',
-];
-
-
-function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q, $interval) {
-  	console.log('DBG:Retrieve Metadata Angular JS directive loaded');
-  function link($scope, elem, attrs, vm) {
-	console.log('DBG:Retrieve Metadata:Link Function loaded');
-	//$scope.model.datacite_metadata = 0
-	$scope.retrieveMetadata = function() {
-		console.log('DBG:Button pressed');
-	/*	
-		$scope.model.datacite_metadata = 1
-		$interval(function() {
-			$scope.model.datacite_metadata = 0
-		}, 3000, 1)
-	*/
-		console.log('DBG: %s',  $scope.model.doi);
-		$http({
-			method : "GET",
-			url : "https://api.datacite.org/dois/10.13127/etna_infra/raw_20181223_25"
-		}).then(function mySuccess(response) {
-			//$scope.model.datacite_metadata = response.data;
-			console.log(response.data);
-			//$scope.model.datacite_metadata = 1
-		}, function myError(response) {
-			$scope.statusText = response.statusText;
-		});
-	}
-  }
-  return {
-    scope: false,
-    restrict: 'A',
-    require: '^invenioRecords',
-    link: link,
-  };
-}
-
-retrieveMetadata.$inject = [
-	'$rootScope',
-	'InvenioRecordsAPI',
-	'$http',
-	'$q',
-	'$interval',
 ];
 
 function communitiesSelect($http, $q, openAIRE) {
@@ -291,5 +245,4 @@ angular.module('invenioRecords.directives')
   .directive('prereserveButton', prereserveButton)
   .directive('communitiesSelect', communitiesSelect)
   .directive('openaireSubtype', openaireSubtype)
-  .directive('selectResourceTypes', selectResourceTypes)
-  .directive('retrieveMetadata', retrieveMetadata);
+  .directive('selectResourceTypes', selectResourceTypes);
