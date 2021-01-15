@@ -23,10 +23,10 @@
 
 ============================
  Zenodo  - Research. Shared.
- ============================
+============================
 
  Custom Modification for INGV - OE Istituto Nazionale di Geofisica e Vulcanologia - Osservatorio Etneo
-=======
+======================================================================================================
 
 .. image:: https://img.shields.io/travis/zenodo/zenodo.svg
    :target: https://travis-ci.org/zenodo/zenodo
