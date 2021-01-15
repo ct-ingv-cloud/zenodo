@@ -22,7 +22,9 @@
     as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 ============================
- Zenodo - Research. Shared.
+ Zenodo  - Research. Shared.
+ Custom Modification for INGV - OE 
+ Istituto Nazionale di Geofisica e Vulcanologia - Osservatorio Etneo
 ============================
 
 .. image:: https://img.shields.io/travis/zenodo/zenodo.svg
@@ -47,22 +49,14 @@ Zenodo, a CERN service, is an open dependable home for the long-tail of
 science, enabling researchers to share and preserve any research outputs in
 any size, any format and from any science.
 
+We provided some custom modification to 'vertically' adapt the use of Zenodo for Dataset pubblications at INGV-OE.
+
 Powered by Invenio
 ------------------
 Zenodo is a small layer on top of
 `Invenio <https://github.com/inveniosoftware/invenio>`_, a ​free software
 suite enabling you to run your own ​digital library or document repository on
 the web.
-
-
-Installation
-============
-See `INSTALL.rst <https://github.com/zenodo/zenodo/blob/master/INSTALL.rst>`_
-
-Developer documentation
-=======================
-See https://zenodo.readthedocs.io/
-
 
 License
 =======
