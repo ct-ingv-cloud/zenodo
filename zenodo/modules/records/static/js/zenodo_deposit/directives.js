@@ -1,6 +1,5 @@
-// This file is part of Zenodo and Zenodo adaptations for INGV - Osservatorio Etneo.
-//
-// Zenodo Copyright (C) 2017 CERN.
+// This file is part of Zenodo.
+// Copyright (C) 2017 CERN.
 //
 // Zenodo is free software; you can redistribute it
 // and/or modify it under the terms of the GNU General Public License as
@@ -22,54 +21,146 @@
 // as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
-    //console.log('DBG:Retrieve Metadata Angular JS directive loaded');
-
-
   var pdz_dep_url = 'https://pdz-dev.ddns.net:5000/api/deposit/depositions/';
   var config = 'Authorization: Bearer TOKEN';
 
+// Oggetti di supporto per il mapping ** Potrebbero esser Maps
+  var mapping = {
+    //DATACITE    :   ZENODO 
+    "id"      :   "doi_url", 
+    "doi"     :   "doi",
 
-  function simpleParser(data, metadata) {
-        var metadataResult = {};
-        //console.log(data);
+    "types"     :   "upload_type",
+    "creators"    :   "creators",
+    "descriptions"  :   "description",
+    "subjects"    :   "keywords",
 
-          //LOCATIONS
-          var result = [];
-          var locations = data.attributes['geoLocations'];
-          locations.forEach(function(loc) {
-                var obj= {};
-                if ('geoLocationPlace' in loc)
-                        obj['place'] = loc.geoLocationPlace;
-                if ('geoLocationPoint' in loc) {
-                        if (loc.geoLocationPoint.pointLatitude !== undefined) {
-                                obj['lat'] = loc.geoLocationPoint.pointLatitude;
-                        }
-                        if (loc.geoLocationPoint.pointLongitude !== undefined) {
-                                obj['lon'] = loc.geoLocationPoint.pointLongitude;
-                        }
-                }
-                if ('geoLocationBox' in loc) {
-                        if (loc.geoLocationBox.eastBoundLongitude !== undefined) {
-                                obj['lon'] = loc.geoLocationBox.eastBoundLongitude;
-                        }
-                        if (loc.geoLocationBox.northBoundLatitude !== undefined) {
-                                obj['lat'] = loc.geoLocationBox.northBoundLatitude;
-                        }
-                }
-                result.push(obj);
-          });
-          metadata['locations'] = result;
+    "geoLocations"  :   "locations"
+  };
 
-          //KEYWORDS
-          result = [];
-          data.attributes['subjects'].forEach(function(subj) {
-                result.push(subj['subject']);
-          });
-          metadata['keywords'] = result;
+  var upload_type_mapping = {
+    "Journal Article"   :   "article",
+    "ScholarlyArticle"    :   "article",
+    "Conference Abstract"   :   "conferencepaper",
 
-          return metadata;
+    "Dataset"         :   "dataset",
+
+    "Presentation"      :   "presentation",
+    "Software"        :   "software",
+    "Poster"        :   "poster"
+  };
+
+  function parser(dc, metadata) {
+    //Object.entries(mapping).forEach(([key, value]) => {
+    //for (var [key, value] of Object.entries(mapping)) {
+    for(var key in mapping) {
+      var value = mapping[key];
+      // Controlla la presenza della chiave nel mapping-schema per ogni coppia (chiave,valore)
+      if (key in dc) {
+
+        // GENERICA STRINGA : Ogni tipo stringa generica viene semplicemente rimappato
+        // Esempio: id->doi_url, doi->doi
+
+        if (typeof dc[key] === "string")
+          metadata[value] = dc[key];
+        
+        // TIPO di UPLOAD : Controlla il tipo di upload e lo rimappa nello schema Zenodo,
+        // utilizzando il dizionario di mapping ausiliario upload_type_mapping;
+        // Viene utilizzata la chiave 'schemaOrg' come campo chiave nello schema Datacite,
+        // e viene cercata una corrispondenza del valore a tale chiave nel upload_type_mapping;
+        // Esempio: Journal Article->article, Dataset->dataset
+
+        if (typeof dc[key] === "object" && key === "types") {
+          if (dc[key].hasOwnProperty('schemaOrg')) {
+            //for (var [umk, umv] of Object.entries(upload_type_mapping)) {
+            for ( var umk in upload_type_mapping) {
+              var umv = upload_type_mapping[umk];
+              if (umk === dc[key].schemaOrg) {
+                metadata[value] = umv;
+                break;
+              }
+              else
+                metadata[value] = 'other';
+            }
+          }
+        }
+
+        // LISTA di CREATORI : L'input nello schema DC è un Array; Viene scorso e per ogni
+        // elemento viene preso il campo 'name' e la sua 'affiliation' secondo lo schema Zenodo
+
+        if (key === "creators") {
+          var creators = [];
+          //dc[key].forEach(element => {
+          for ( var element in dc[key] ) {
+            var creator = {};
+            creator['name'] = element.name;
+
+            if (element.hasOwnProperty('affiliation')) {
+              //element.affiliation.forEach(e => {
+              for ( var e in element.affiliation ) {
+                creator['affiliation'] = e.name;  
+              };
+            }
+            creators.push(creator);
+          };
+          metadata[value] = creators;
+        }
+        
+        //KEYWORDS DC(Array)
+        if (key === "subjects") {
+          var keywords = [];
+          //dc[key].forEach(element => {
+          for ( var element in dc[key] ) {
+            keywords.push(element.subject);
+          };
+          metadata[value] = keywords;
+        }
+        
+        //DESCRIPTION DC(Array)
+        if (key === "descriptions") {
+          var description = '';
+          //dc[key].forEach(element => {
+          for ( var element in dc[key] ) {
+            description = description.concat(element.description);
+          };
+          metadata[value] = description;
+        }
+
+        //GEOLOCATION DC(Array)
+        if (key === "geoLocations") {
+          var locations = [];
+
+          //dc[key].forEach(loc => {
+          for ( var loc in dc[key] ) {
+            var location = {};
+            
+            if (loc.hasOwnProperty('geoLocationPoint')) {
+              if (loc.geoLocationPoint.pointLatitude !== undefined) {
+                location['lat'] = loc.geoLocationPoint.pointLatitude;
+              }
+              if (loc.geoLocationPoint.pointLongitude !== undefined) {
+                location['lon'] = loc.geoLocationPoint.pointLongitude;
+              }
+            }
+
+            if (loc.hasOwnProperty('geoLocationPlace'))
+              location['place'] = loc.geoLocationPlace;
+
+            // Prova a stimare un punto mediano nel parallelogramma
+            if (loc.hasOwnProperty('geoLocationBox')) {
+              location['lat'] = loc.geoLocationBox.northBoundLatitude - ((loc.geoLocationBox.northBoundLatitude - loc.geoLocationBox.southBoundLatitude)/2); 
+              location['lon'] = loc.geoLocationBox.eastBoundLongitude - ((loc.geoLocationBox.eastBoundLongitude - loc.geoLocationBox.westBoundLongitude)/2);
+            }
+
+            locations.push(location);  
+          };
+
+          metadata[value] = locations;
+        }
+      }
+    };
+    return metadata;
   }
-
 
   function link($scope, elem, attrs, vm) {
   //console.log('DBG:Retrieve Metadata:Link Function loaded');
@@ -98,7 +189,7 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
           $http.post(url + '/actions/edit', {}, config).then(function(response) {
             // 3 Remapping metadata
             //
-            response.data.metadata = simpleParser(dc_metadata, response.data.metadata);
+            response.data.metadata = parser(dc_metadata, response.data.metadata);
 
             //console.log(response.data.metadata);
             $http.put(url, {'metadata': response.data.metadata}, config).then(function(response) {
@@ -146,7 +237,6 @@ retrieveMetadata.$inject = [
   '$q',
   '$interval',
 ];
-
 
 angular.module('invenioRecords.directives')
   .directive('retrieveMetadata', retrieveMetadata);
