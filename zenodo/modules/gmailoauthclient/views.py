@@ -32,6 +32,7 @@ from oauthlib.oauth2 import WebApplicationClient
 _security = LocalProxy(lambda: current_app.extensions['security'])
 _datastore = LocalProxy(lambda: _security.datastore)
 _clientId = LocalProxy(lambda: current_app.config.get('GOOGLE_CLIENT_ID'))
+_clientSecret = LocalProxy(lambda: current_app.config.get('GOOGLE_CLIENT_SECRET'))
 client = WebApplicationClient(_clientId)
 
 blueprint = Blueprint(
@@ -62,7 +63,7 @@ def callback():
         token_url,
         headers=headers,
         data=body,
-        auth=(current_app.config.get('GOOGLE_CLIENT_ID'), current_app.config.get('GOOGLE_CLIENT_SECRET')),
+        auth=(_clientId, _clientSecret)
     )
 
     # Parse the tokens!
@@ -101,7 +102,7 @@ def callback():
 
 @blueprint.route('/login')
 def login():
-    current_app.logger.debug('Try to authenticate with app PDZ: %s' %current_app.config.get('GOOGLE_CLIENT_ID'))
+    current_app.logger.debug('Try to authenticate with app PDZ: %s' %_clientId)
 
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()

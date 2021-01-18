@@ -81,12 +81,12 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
   console.log('DBG:Retrieve Metadata Angular JS directive loaded');
 
   var pdz_dep_url = 'https://pdz-dev.ddns.net:5000/api/deposit/depositions/';
-  var config = 'Authorization: Bearer Rn4DFeAqujdYFnqoSDtjqXKmG59hPI26u6rrVngY61ECrny22o4ySzWDoUmo';
+  var config = 'Authorization: TOKEN_AUTH';
 
 // Oggetti di supporto per il mapping ** Potrebbero esser Maps
   var mapping = {
-    //DATACITE    :   ZENODO 
-    //"id"      :   "doi_url", 
+    //DATACITE    :   ZENODO
+    //"id"      :   "doi_url",
     "doi"           :   "doi",
 
     "types"         :   "upload_type",
@@ -120,7 +120,7 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
         if (typeof dc[key] === "string") {
           metadata[value] = dc[key];
         }
-        
+
         // TIPO di UPLOAD : Controlla il tipo di upload e lo rimappa nello schema Zenodo,
         // utilizzando il dizionario di mapping ausiliario upload_type_mapping;
         // Viene utilizzata la chiave 'schemaOrg' come campo chiave nello schema Datacite,
@@ -148,33 +148,35 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
         // LISTA di CREATORI : L'input nello schema DC è un Array; Viene scorso e per ogni
         // elemento viene preso il campo 'name' e la sua 'affiliation' secondo lo schema Zenodo
 
-        if (key === "creators") {
+        if (key === "creators" && dc[key] && dc[key].length) {
           var creators = [];
           dc[key].forEach(function(element) {
             var creator = {};
-            creator['name'] = element.name;
-
+            //creator['name'] = element.name;
+            creator['name'] = element.familyName + " " + element.givenName;
             if (element.hasOwnProperty('affiliation')) {
+              creator['affiliation'] = element.affiliation[0].name;
+              /*
               element.affiliation.forEach(function(e) {
-                creator['affiliation'] = e.name;  
-              });
+                creator['affiliation'] = e.name;
+              });*/
             }
             creators.push(creator);
           });
           metadata[value] = creators;
         }
-        
+
         //KEYWORDS DC(Array)
-        if (key === "subjects") {
+        if (key === "subjects" && dc[key] && dc[key].length) {
           var keywords = [];
           dc[key].forEach(function(element) {
             keywords.push(element.subject);
           });
           metadata[value] = keywords;
         }
-        
+
         //DESCRIPTION DC(Array)
-        if (key === "descriptions") {
+        if (key === "descriptions" && dc[key] && dc[key].length) {
           var description = '';
           dc[key].forEach(function(element) {
             description = description.concat(element.description);
@@ -203,11 +205,11 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
 
             // Prova a stimare un punto mediano nel parallelogramma
             if (loc.hasOwnProperty('geoLocationBox')) {
-              location['lat'] = loc.geoLocationBox.northBoundLatitude - ((loc.geoLocationBox.northBoundLatitude - loc.geoLocationBox.southBoundLatitude)/2); 
+              location['lat'] = loc.geoLocationBox.northBoundLatitude - ((loc.geoLocationBox.northBoundLatitude - loc.geoLocationBox.southBoundLatitude)/2);
               location['lon'] = loc.geoLocationBox.eastBoundLongitude - ((loc.geoLocationBox.eastBoundLongitude - loc.geoLocationBox.westBoundLongitude)/2);
             }
 
-            locations.push(location);  
+            locations.push(location);
           });
 
           metadata[value] = locations;
@@ -260,7 +262,7 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
   function link($scope, elem, attrs, vm) {
     //console.log('DBG:Retrieve Metadata:Link Function loaded');
     $scope.retrieveMetadata = function(rec) {
-    
+
     var dc_url = "https://api.datacite.org/dois/" + rec.doi;
     var dc_metadata = {};
 
