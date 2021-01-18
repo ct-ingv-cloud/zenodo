@@ -23,7 +23,7 @@
 angular.module('invenioRecords.providers', []);
 
 // OpenAIRE types configuration
-function openAIRE() {
+function openAIRE() { console.log("Chiamata providers.js openAIRE *** Records ***");
   var communities = {};
   var communitiesMapping = {};
   return {
@@ -38,7 +38,7 @@ function openAIRE() {
 }
 
 //Resource types configuration
-function resourceTypes() {
+function resourceTypes() { console.log("Chiamata providers.js resourceType *** Records ***");
   var resourceTypesList = [];
   return {
     setResourceTypes: function(values) { resourceTypesList = values; },

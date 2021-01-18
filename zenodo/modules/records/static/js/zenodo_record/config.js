@@ -21,7 +21,7 @@
 // as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 function configZenodoDeposit($provide, decoratorsProvider, $windowProvider) {
-
+  console.log("Chiamata config.js *** Records ***");
   // TODO: Check if these are needed, since we have DEPOSIT_FORM_TEMPLATES
   // New field types
   decoratorsProvider.addMapping('bootstrapDecorator', 'uiselect', '/static/templates/zenodo_deposit/uiselect.html');

@@ -34,7 +34,7 @@
 //
 // The remedy for this issue is to handle the update of ui-select's
 // model manually, by overriding its controller.
-function invenioDynamicSelectController($scope, $controller) {
+function invenioDynamicSelectController($scope, $controller) { console.log('chiamata controller.js ***records***');
   $controller('dynamicSelectController', {$scope: $scope});
   // If it is ui-select inside an array...
   if ($scope.modelArray) {

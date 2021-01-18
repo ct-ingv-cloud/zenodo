@@ -120,6 +120,8 @@ function formatOpenAIRECommunities() {
   };
 }
 
+console.log("Chiamata filters.js *** Deposits ***");
+
 angular.module('invenioRecords')
   .filter('fieldtitle', fieldtitle)
   .filter('notIn', notIn)
