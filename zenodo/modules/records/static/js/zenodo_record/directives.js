@@ -98,13 +98,14 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
             var creator = {};
             //creator['name'] = element.name;
             creator['name'] = element.familyName + " " + element.givenName;
+            /*
             if (element.hasOwnProperty('affiliation')) {
               creator['affiliation'] = element.affiliation[0].name;
-              /*
-              element.affiliation.forEach(function(e) {
-                creator['affiliation'] = e.name;
-              });*/
-            }
+              
+              //element.affiliation.forEach(function(e) {
+              //  creator['affiliation'] = e.name;
+              //});
+            }*/
             creators.push(creator);
           });
           metadata[value] = creators;
@@ -165,9 +166,10 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
 
   function link($scope, elem, attrs, vm) {
     //console.log('DBG:Retrieve Metadata:Link Function loaded');
-    $scope.retrieveMetadata = function(rec) {
+    $scope.retrieveMetadata = function(recDoi, recId) {
 
-    var dc_url = "https://api.datacite.org/dois/" + rec.doi;
+    //var dc_url = "https://api.datacite.org/dois/" + rec.doi;
+    var dc_url = "https://api.datacite.org/dois/" + recDoi;
     var dc_metadata = {};
 
     $http({
@@ -175,7 +177,7 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
       url : dc_url
     }).then(function mySuccess(response) {
       dc_metadata = response.data.data;
-      var url = pdz_dep_url + rec.recid;
+      var url = pdz_dep_url + recId; //rec.recid;
 
       // 1 Deposition from Record
       //

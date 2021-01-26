@@ -34,10 +34,10 @@ window.CKEDITOR_BASEPATH = '{{url_for("static", filename="node_modules/ckeditor/
 {% assets "zenodo_theme_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 
 <script type="text/javascript">
-	window.CKEDITOR.config.mathJaxLib = '{{config.THEME_MATHJAX_CDN}}';
 
 	angular.element(document).ready(function() {
-		window.alert('greeting');
+    window.CKEDITOR.config.mathJaxLib = '{{config.THEME_MATHJAX_CDN}}';
+		//window.alert('greeting');
 		var app = angular.module('invenioRecords');
 		app.requires.push('invenioRecords.directives');
 		angular.bootstrap(
@@ -57,7 +57,7 @@ window.CKEDITOR_BASEPATH = '{{url_for("static", filename="node_modules/ckeditor/
 <form action="{{ url_for('zenodo_deposit.edit', pid_value=pid.pid_value) }}" method="POST">
   <button class="btn btn-warning btn-block" type="submit" {{ 'disabled' if edit_disabled else ''}}><i class="fa fa-pencil-square-o"></i> Edit</button>
 </form>
-<button id="retrieveMetadataBtn" class="btn btn-info btn-block" ng-click="retrieveMetadata({{record}})" type="submit" {{ 'disabled' if edit_disabled else ''}} retrieve-metadata><i class="fa fa-cloud-download"></i> Import Datacite Metadatas</button>
+<button id="retrieveMetadataBtn" class="btn btn-info btn-block" ng-click="retrieveMetadata('{{record.doi}}', '{{record.recid}}')" type="submit" {{ 'disabled' if edit_disabled else ''}} retrieve-metadata><i class="fa fa-cloud-download"></i> Import Datacite Metadatas</button>
 {%- endif %}
 
 {# Only local DOIs can be versioned #}
