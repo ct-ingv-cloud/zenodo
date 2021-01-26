@@ -57,3 +57,18 @@ docs/_build/
 target/
 
 test.db
+
+
+# Certificates
+docker/nginx/*.crt
+docker/nginx/*.key
+docker/haproxy/*.pem
+
+# Backup files
+*.bak
+*_bak
+
+# Config file
+*.cfg
+
+

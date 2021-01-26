@@ -24,6 +24,11 @@ RUN apt-get update \
     && rm -rf /usr/share/man/* /usr/share/groff/* /usr/share/info/* \
     && find /usr/share/doc -depth -type f ! -name copyright -delete
 
+# Install NVM
+RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
+ENV NVM_DIR ~/.nvm
+RUN ["/bin/bash", "-c", ". $HOME/.bashrc && nvm install 7.4.0 && nvm use 7.4.0 "]
+
 # Include /usr/local/bin in path.
 RUN echo "export PATH=${PATH}:/usr/local/bin >> ~/.bashrc"
 
@@ -32,7 +37,7 @@ RUN pip install --upgrade pip setuptools ipython wheel uwsgi pipdeptree
 
 # NPM
 COPY ./scripts/setup-npm.sh /tmp
-RUN /tmp/setup-npm.sh
+RUN ["/bin/bash", "-c", ". $HOME/.bashrc && nvm use 7.4.0 && ./tmp/setup-npm.sh"]
 
 #
 # Zenodo specific
@@ -42,6 +47,7 @@ RUN /tmp/setup-npm.sh
 ENV INVENIO_INSTANCE_PATH /usr/local/var/instance
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 WORKDIR /tmp
+COPY ./invenio.cfg ${INVENIO_INSTANCE_PATH}/
 
 # Copy and install requirements. Faster build utilizing the Docker cache.
 COPY requirements*.txt /tmp/
@@ -58,12 +64,12 @@ RUN pip install -e .[postgresql,elasticsearch2,all] \
     && python -O -m compileall .
 
 # Install npm dependencies and build assets.
-RUN zenodo npm --pinned-file /code/zenodo/package.pinned.json \
+RUN ["/bin/bash", "-c", ". $HOME/.bashrc && nvm use 7.4.0 && zenodo npm --pinned-file /code/zenodo/package.pinned.json \
     && cd ${INVENIO_INSTANCE_PATH}/static \
     && npm install \
     && cd /code/zenodo \
     && zenodo collect -v \
-    && zenodo assets build
+    && zenodo assets build" ]
 
 RUN adduser --uid 1000 --disabled-password --gecos '' zenodo \
     && chown -R zenodo:zenodo /code ${INVENIO_INSTANCE_PATH}
