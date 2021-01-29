@@ -28,6 +28,10 @@
 {%- block javascript %}
 {% assets "zenodo_datacite_importer_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 <script type="text/javascript">
+	window.appConfig = {
+	  siteURL: '{{ config['THEME_SITEURL'] }}',
+		token: '{{ config['ZENODO_IMPORTER_TOKEN'] }}',
+	}
   angular.element(document).ready(function() {
     var app = angular.module('invenioRecords');
     app.requires.push('invenioRecords.directives', 'invenioRecords.controllers');

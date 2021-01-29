@@ -23,9 +23,8 @@
 
 function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q) {
 	console.log('DBG:Retrieve Metadata Angular JS directive loaded');
-	var pdz_dep_url = 'https://pdz-dev.ddns.net/api/deposit/depositions/';
-	var config = 'Authorization: Bearer TOKEN_HERE_TO_BE_PASSED_BY_VARs';
-
+	var pdz_dep_url = appConfig.siteURL + '/api/deposit/depositions/';
+	var config = 'Authorization: Bearer ' + appConfig.token;
 	// Oggetti di supporto per il mapping ** Potrebbero esser Maps
 	var mapping = {
 		//DATACITE    :   ZENODO

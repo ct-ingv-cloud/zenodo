@@ -83,7 +83,8 @@ def _(x):
     """Identity function for string extraction."""
     return x
 
-
+#: Metadata importer Bearer Token
+ZENODO_IMPORTER_TOKEN = 'TOKEN_HERE'
 #: System sender email address
 ZENODO_SYSTEM_SENDER_EMAIL = 'system@zenodo.org'
 #: Email address of admins
