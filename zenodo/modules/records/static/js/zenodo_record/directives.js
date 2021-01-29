@@ -23,7 +23,6 @@
 
 function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
   console.log('DBG:Retrieve Metadata Angular JS directive loaded');
-  console.log('prova');
   var pdz_dep_url = 'https://pdz-dev.ddns.net/api/deposit/depositions/';
   var config = 'Authorization: Bearer TOKEN_HERE_TO_BE_PASSED_BY_VARs';
 
@@ -211,13 +210,13 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
             alert('ERROR 3 when importing MetaDatas');
           });
 
-        }, function (error) { 
-		console.log('ERR:STEP 2'); 
+        }, function (error) {
+		console.log('ERR:STEP 2');
 		console.error(error);
 		alert('ERROR 2 when importing MetaDatas');
 	});
-      }, function(error) { 
-	      console.log('ERR:STEP 1'); 
+      }, function(error) {
+	      console.log('ERR:STEP 1');
 	      console.error(error);
 	      alert('ERROR 1 when importing MetaDatas');
       });

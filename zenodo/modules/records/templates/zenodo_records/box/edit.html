@@ -26,26 +26,14 @@
 {%- set edit_disabled = not (record.doi and (record._deposit and record._deposit.id)) %}
 
 {%- block javascript %}
-<script type="text/javascript">
-// Configuration for invenio_deposit_dependencies_js libraries
-window.CKEDITOR_BASEPATH = '{{url_for("static", filename="node_modules/ckeditor/")}}';
-</script>
 {% assets "zenodo_datacite_importer_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% assets "zenodo_theme_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-
 <script type="text/javascript">
-
   angular.element(document).ready(function() {
-    window.CKEDITOR.config.mathJaxLib = '{{config.THEME_MATHJAX_CDN}}';
     var app = angular.module('invenioRecords');
-    app.requires.push('invenioRecords.directives');
+    app.requires.push('invenioRecords.directives', 'invenioRecords.controllers');
     angular.bootstrap(
       document.getElementById('retrieveMetadataBtn'), [
-        'invenioRecords', 'invenioFiles',
-        'mgcrea.ngStrap.helpers.dateParser', 'mgcrea.ngStrap.tooltip',
-        'ui.select', 'mgcrea.ngStrap.select', 'mgcrea.ngStrap.datepicker',
-        'mgcrea.ngStrap.modal', 'pascalprecht.translate', 'ui.sortable',
-        'schemaForm', 'mgcrea.ngStrap'
+        'invenioRecords'
       ]);
   });
 </script>
