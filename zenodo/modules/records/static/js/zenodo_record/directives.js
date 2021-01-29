@@ -23,9 +23,9 @@
 
 function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
   console.log('DBG:Retrieve Metadata Angular JS directive loaded');
-
-  var pdz_dep_url = 'https://pdz-dev.ddns.net:5000/api/deposit/depositions/';
-  var config = 'Authorization: Bearer TOKEN';
+  console.log('prova');
+  var pdz_dep_url = 'https://pdz-dev.ddns.net/api/deposit/depositions/';
+  var config = 'Authorization: Bearer TOKEN_HERE_TO_BE_PASSED_BY_VARs';
 
 // Oggetti di supporto per il mapping ** Potrebbero esser Maps
   var mapping = {
@@ -195,19 +195,32 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
             $http.post(url + '/actions/publish', {}, config).then(function(response) {
               // Published
               //
+	      //$scope.alert = alert.bind(window);
+	      //alert('Successfully imported MetaDatas from DataCite');
+	      if(!alert('Successfully imported MetaDatas from DataCite')){window.location.reload();}
             }, function (error) {
               console.log('ERR:STEP 4');
               console.error(error);
               $http.post(url + '/actions/discard', {}, config).then(function(response) {}, function(error) {});
+	      alert('ERROR 4 when importing MetaDatas');
             });
           }, function(error) { //Call discard action
             console.log('ERR:STEP 3');
             console.error(error);
             $http.post(url + '/actions/discard', {}, config).then(function(response) {}, function(error) {});
+            alert('ERROR 3 when importing MetaDatas');
           });
 
-        }, function (error) { console.log('ERR:STEP 2'); console.error(error) });
-      }, function(error) { console.log('ERR:STEP 1'); console.error(error) });
+        }, function (error) { 
+		console.log('ERR:STEP 2'); 
+		console.error(error);
+		alert('ERROR 2 when importing MetaDatas');
+	});
+      }, function(error) { 
+	      console.log('ERR:STEP 1'); 
+	      console.error(error);
+	      alert('ERROR 1 when importing MetaDatas');
+      });
 
       //$scope.model.datacite_metadata = 1
     }, function myError(response) {

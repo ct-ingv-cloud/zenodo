@@ -35,20 +35,19 @@ window.CKEDITOR_BASEPATH = '{{url_for("static", filename="node_modules/ckeditor/
 
 <script type="text/javascript">
 
-	angular.element(document).ready(function() {
+  angular.element(document).ready(function() {
     window.CKEDITOR.config.mathJaxLib = '{{config.THEME_MATHJAX_CDN}}';
-		//window.alert('greeting');
-		var app = angular.module('invenioRecords');
-		app.requires.push('invenioRecords.directives');
-		angular.bootstrap(
-			document.getElementById('retrieveMetadataBtn'), [
-				'invenioRecords', 'invenioFiles',
-				'mgcrea.ngStrap.helpers.dateParser', 'mgcrea.ngStrap.tooltip',
-				'ui.select', 'mgcrea.ngStrap.select', 'mgcrea.ngStrap.datepicker',
-				'mgcrea.ngStrap.modal', 'pascalprecht.translate', 'ui.sortable',
-				'schemaForm', 'mgcrea.ngStrap'
-			]);
-	});
+    var app = angular.module('invenioRecords');
+    app.requires.push('invenioRecords.directives');
+    angular.bootstrap(
+      document.getElementById('retrieveMetadataBtn'), [
+        'invenioRecords', 'invenioFiles',
+        'mgcrea.ngStrap.helpers.dateParser', 'mgcrea.ngStrap.tooltip',
+        'ui.select', 'mgcrea.ngStrap.select', 'mgcrea.ngStrap.datepicker',
+        'mgcrea.ngStrap.modal', 'pascalprecht.translate', 'ui.sortable',
+        'schemaForm', 'mgcrea.ngStrap'
+      ]);
+  });
 </script>
 
 {%- endblock javascript %}
