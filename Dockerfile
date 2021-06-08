@@ -14,9 +14,9 @@ RUN apt-get update \
         apt-utils curl libcairo2-dev fonts-dejavu libfreetype6-dev \
         uwsgi-plugin-python \
     # Node.js
-    && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-    && apt-get -qy install --fix-missing --no-install-recommends \
-        nodejs \
+    #&& curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    #&& apt-get -qy install --fix-missing --no-install-recommends \
+    #    nodejs \
     # Slim down image
     && apt-get clean autoclean \
     && apt-get autoremove -y \
@@ -25,9 +25,24 @@ RUN apt-get update \
     && find /usr/share/doc -depth -type f ! -name copyright -delete
 
 # Install NVM
-RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
-ENV NVM_DIR ~/.nvm
-RUN ["/bin/bash", "-c", ". $HOME/.bashrc && nvm install 7.4.0 && nvm use 7.4.0 "]
+#RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
+#ENV NVM_DIR ~/.nvm
+#RUN ["/bin/bash", "-c", ". $HOME/.bashrc && nvm install 7.4.0 && nvm use 7.4.0"]
+
+RUN mkdir /usr/local/nvm
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 7.4.0
+
+# Install nvm with node and npm
+#RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
+RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # Include /usr/local/bin in path.
 RUN echo "export PATH=${PATH}:/usr/local/bin >> ~/.bashrc"
@@ -47,6 +62,7 @@ RUN ["/bin/bash", "-c", ". $HOME/.bashrc && nvm use 7.4.0 && ./tmp/setup-npm.sh"
 ENV INVENIO_INSTANCE_PATH /usr/local/var/instance
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 WORKDIR /tmp
+
 COPY ./invenio.cfg ${INVENIO_INSTANCE_PATH}/
 
 # Copy and install requirements. Faster build utilizing the Docker cache.

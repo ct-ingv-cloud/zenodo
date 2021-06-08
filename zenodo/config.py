@@ -296,7 +296,10 @@ CELERY_BEAT_SCHEDULE = {
 #: Cache key prefix
 CACHE_KEY_PREFIX = "cache::"
 #: Host
+#DEV ENVIRONMENT
 CACHE_REDIS_HOST = "localhost"
+#PROD ENVIRONMENT
+#CACHE_REDIS_HOST = "cache"
 #: Port
 CACHE_REDIS_PORT = 6379
 #: DB

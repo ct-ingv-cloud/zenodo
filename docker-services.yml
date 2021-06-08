@@ -17,6 +17,8 @@ services:
       - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql://zenodo:zenodo@db/zenodo"
       - "INVENIO_WSGI_PROXIES=2"
       - "FLASK_DEBUG=${FLASK_DEBUG:-on}"
+      - "GOOGLE_CLIENT_ID=<GOOGLE_CLIENT_ID>"
+      - "GOOGLE_CLIENT_SECRET=<GOOGLE_SECRET>"
   lb:
     build: ./docker/haproxy/
     image: zenodo-lb:latest

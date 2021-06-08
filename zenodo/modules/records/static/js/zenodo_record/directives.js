@@ -23,8 +23,7 @@
 
 function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
   console.log('DBG:Retrieve Metadata Angular JS directive loaded');
-
-  var pdz_dep_url = 'https://pdz-dev.ddns.net:5000/api/deposit/depositions/';
+  var pdz_dep_url = 'SITE_URL';
   var config = 'Authorization: Bearer TOKEN';
 
 // Oggetti di supporto per il mapping ** Potrebbero esser Maps
@@ -52,7 +51,7 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
     "Software"              :   "software",
     "Poster"                :   "poster"
   };
-
+  
   function simpleParserNG(dc, metadata) {
     for(var key in mapping) {
       var value = mapping[key];
@@ -195,19 +194,32 @@ function retrieveMetadata($rootScope, InvenioRecordsAPI, $http, $q ) {
             $http.post(url + '/actions/publish', {}, config).then(function(response) {
               // Published
               //
+	      //$scope.alert = alert.bind(window);
+	      //alert('Successfully imported MetaDatas from DataCite');
+	      if(!alert('Successfully imported MetaDatas from DataCite')){window.location.reload();}
             }, function (error) {
               console.log('ERR:STEP 4');
               console.error(error);
               $http.post(url + '/actions/discard', {}, config).then(function(response) {}, function(error) {});
+	      alert('ERROR 4 when importing MetaDatas');
             });
           }, function(error) { //Call discard action
             console.log('ERR:STEP 3');
             console.error(error);
             $http.post(url + '/actions/discard', {}, config).then(function(response) {}, function(error) {});
+            alert('ERROR 3 when importing MetaDatas');
           });
 
-        }, function (error) { console.log('ERR:STEP 2'); console.error(error) });
-      }, function(error) { console.log('ERR:STEP 1'); console.error(error) });
+        }, function (error) { 
+		console.log('ERR:STEP 2'); 
+		console.error(error);
+		alert('ERROR 2 when importing MetaDatas');
+	});
+      }, function(error) { 
+	      console.log('ERR:STEP 1'); 
+	      console.error(error);
+	      alert('ERROR 1 when importing MetaDatas');
+      });
 
       //$scope.model.datacite_metadata = 1
     }, function myError(response) {
