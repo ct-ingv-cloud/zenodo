@@ -21,9 +21,7 @@
 // as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 function prereserveButton($rootScope, InvenioRecordsAPI) {
-  console.log("Creata prereserve button in **deposit**.");
   function link($scope, elem, attrs, vm) {
-    console.log("Chiamata prereserve button in **deposit**.");
     $scope.prereserveDOI = function() {
       if ($scope.model.prereserve_doi &&
           $scope.model.prereserve_doi.doi) {
